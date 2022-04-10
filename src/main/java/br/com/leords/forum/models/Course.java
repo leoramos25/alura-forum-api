@@ -1,7 +1,13 @@
 package br.com.leords.forum.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "courses")
 public class Course {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String category;

@@ -1,13 +1,20 @@
 package br.com.leords.forum.models;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "answers")
 public class Answer {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
+    @ManyToOne
     private Topic topic;
     private LocalDateTime createdAt;
+    @ManyToOne
     private User author;
     private Boolean solution = false;
     
