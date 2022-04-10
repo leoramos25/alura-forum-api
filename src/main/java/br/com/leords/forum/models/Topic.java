@@ -14,6 +14,12 @@ public class Topic {
     private Course course;
     private List<Answer> answers = new ArrayList<>();
     
+    public Topic(String title, String message, Course course) {
+        this.title = title;
+        this.message = message;
+        this.course = course;
+    }
+    
     public Long getId() {
         return id;
     }
