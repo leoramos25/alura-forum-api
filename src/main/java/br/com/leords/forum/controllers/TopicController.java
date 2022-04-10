@@ -1,5 +1,6 @@
 package br.com.leords.forum.controllers;
 
+import br.com.leords.forum.controllers.dtos.TopicDto;
 import br.com.leords.forum.models.Course;
 import br.com.leords.forum.models.Topic;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +15,10 @@ import java.util.List;
 public class TopicController {
     
     @GetMapping
-    public List<Topic> listTopics() {
+    public List<TopicDto> listTopics() {
         Topic topic = new Topic("Dudida", "Duvida com spring boot", new Course("Spring", "Programação"));
         
-        return Arrays.asList(topic, topic, topic);
+        return TopicDto.modelToDto(Arrays.asList(topic, topic, topic));
     }
     
 }

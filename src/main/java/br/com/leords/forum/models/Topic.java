@@ -8,7 +8,7 @@ public class Topic {
     private Long id;
     private String title;
     private String message;
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
     private TopicStatus status = TopicStatus.NOT_ANSWERED;
     private User author;
     private Course course;
