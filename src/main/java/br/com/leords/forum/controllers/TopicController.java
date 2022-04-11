@@ -1,5 +1,6 @@
 package br.com.leords.forum.controllers;
 
+import br.com.leords.forum.controllers.dtos.DetailsTopicDto;
 import br.com.leords.forum.controllers.dtos.TopicDto;
 import br.com.leords.forum.controllers.forms.TopicForm;
 import br.com.leords.forum.models.Topic;
@@ -28,9 +29,9 @@ public class TopicController {
     @GetMapping
     public List<TopicDto> listTopics(String courseName) {
         if (courseName == null) {
-            return TopicDto.modelToDto(topicRepository.findAll());
+            return TopicDto.modelsToDtos(topicRepository.findAll());
         }
-        return TopicDto.modelToDto(topicRepository.findByCourseName(courseName));
+        return TopicDto.modelsToDtos(topicRepository.findByCourseName(courseName));
     }
     
     @PostMapping
@@ -39,5 +40,10 @@ public class TopicController {
         topicRepository.save(topic);
         URI uri = uriBuilder.path("/topics/{id}").buildAndExpand(topic.getId()).toUri();
         return ResponseEntity.created(uri).body(new TopicDto(topic));
+    }
+    
+    @GetMapping(path = "/{id}")
+    public DetailsTopicDto detailsTopic(@PathVariable("id") Long id) {
+        return new DetailsTopicDto(topicRepository.getById(id));
     }
 }
