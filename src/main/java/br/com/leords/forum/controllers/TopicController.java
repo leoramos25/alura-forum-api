@@ -7,7 +7,6 @@ import br.com.leords.forum.controllers.forms.UpdateTopicForm;
 import br.com.leords.forum.models.Topic;
 import br.com.leords.forum.repositories.CourseRepository;
 import br.com.leords.forum.repositories.TopicRepository;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -49,7 +48,7 @@ public class TopicController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<DetailsTopicDto> detailsTopic(@PathVariable("id") Long id) {
         Optional<Topic> topic = topicRepository.findById(id);
-        if(topic.isPresent()) {
+        if (topic.isPresent()) {
             return ResponseEntity.ok().body(new DetailsTopicDto(topic.get()));
         }
         return ResponseEntity.notFound().build();
@@ -59,18 +58,18 @@ public class TopicController {
     @Transactional
     public ResponseEntity<TopicDto> updateTopic(@PathVariable("id") Long id, @RequestBody @Valid UpdateTopicForm form) {
         Optional<Topic> topicOptional = topicRepository.findById(id);
-        if(topicOptional.isPresent()) {
+        if (topicOptional.isPresent()) {
             Topic topic = form.update(id, topicRepository);
             return ResponseEntity.ok(new TopicDto(topic));
         }
         return ResponseEntity.notFound().build();
     }
     
-    @DeleteMapping(path= "/{id}")
+    @DeleteMapping(path = "/{id}")
     @Transactional
     public ResponseEntity deleteTopic(@PathVariable("id") Long id) {
         Optional<Topic> topicOptional = topicRepository.findById(id);
-        if(topicOptional.isPresent()) {
+        if (topicOptional.isPresent()) {
             topicRepository.deleteById(id);
             return ResponseEntity.ok().build();
         }
