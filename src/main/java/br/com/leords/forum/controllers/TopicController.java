@@ -7,6 +7,7 @@ import br.com.leords.forum.controllers.forms.UpdateTopicForm;
 import br.com.leords.forum.models.Topic;
 import br.com.leords.forum.repositories.CourseRepository;
 import br.com.leords.forum.repositories.TopicRepository;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,6 +16,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/topics")
@@ -45,21 +47,33 @@ public class TopicController {
     }
     
     @GetMapping(path = "/{id}")
-    public DetailsTopicDto detailsTopic(@PathVariable("id") Long id) {
-        return new DetailsTopicDto(topicRepository.getById(id));
+    public ResponseEntity<DetailsTopicDto> detailsTopic(@PathVariable("id") Long id) {
+        Optional<Topic> topic = topicRepository.findById(id);
+        if(topic.isPresent()) {
+            return ResponseEntity.ok().body(new DetailsTopicDto(topic.get()));
+        }
+        return ResponseEntity.notFound().build();
     }
     
     @PutMapping(path = "/{id}")
     @Transactional
     public ResponseEntity<TopicDto> updateTopic(@PathVariable("id") Long id, @RequestBody @Valid UpdateTopicForm form) {
-        Topic topic = form.update(id, topicRepository);
-        return ResponseEntity.ok(new TopicDto(topic));
+        Optional<Topic> topicOptional = topicRepository.findById(id);
+        if(topicOptional.isPresent()) {
+            Topic topic = form.update(id, topicRepository);
+            return ResponseEntity.ok(new TopicDto(topic));
+        }
+        return ResponseEntity.notFound().build();
     }
     
     @DeleteMapping(path= "/{id}")
     @Transactional
     public ResponseEntity deleteTopic(@PathVariable("id") Long id) {
-        topicRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        Optional<Topic> topicOptional = topicRepository.findById(id);
+        if(topicOptional.isPresent()) {
+            topicRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
