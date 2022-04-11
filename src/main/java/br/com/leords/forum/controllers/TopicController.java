@@ -1,10 +1,10 @@
 package br.com.leords.forum.controllers;
 
 import br.com.leords.forum.controllers.dtos.TopicDto;
+import br.com.leords.forum.controllers.forms.TopicForm;
+import br.com.leords.forum.repositories.CourseRepository;
 import br.com.leords.forum.repositories.TopicRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,9 +13,11 @@ import java.util.List;
 public class TopicController {
     
     private final TopicRepository topicRepository;
+    private final CourseRepository courseRepository;
     
-    public TopicController(TopicRepository topicRepository) {
+    public TopicController(TopicRepository topicRepository, CourseRepository courseRepository) {
         this.topicRepository = topicRepository;
+        this.courseRepository = courseRepository;
     }
     
     @GetMapping
@@ -26,4 +28,8 @@ public class TopicController {
         return TopicDto.modelToDto(topicRepository.findByCourseName(courseName));
     }
     
+    @PostMapping
+    public void createTopic(@RequestBody TopicForm form) {
+        topicRepository.save(form.formToModel(courseRepository));
+    }
 }
