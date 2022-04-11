@@ -55,4 +55,11 @@ public class TopicController {
         Topic topic = form.update(id, topicRepository);
         return ResponseEntity.ok(new TopicDto(topic));
     }
+    
+    @DeleteMapping(path= "/{id}")
+    @Transactional
+    public ResponseEntity deleteTopic(@PathVariable("id") Long id) {
+        topicRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 }
