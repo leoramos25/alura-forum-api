@@ -19,8 +19,11 @@ public class TopicController {
     }
     
     @GetMapping
-    public List<TopicDto> listTopics() {
-        return TopicDto.modelToDto(topicRepository.findAll());
+    public List<TopicDto> listTopics(String courseName) {
+        if (courseName == null) {
+            return TopicDto.modelToDto(topicRepository.findAll());
+        }
+        return TopicDto.modelToDto(topicRepository.findByCourseName(courseName));
     }
     
 }
