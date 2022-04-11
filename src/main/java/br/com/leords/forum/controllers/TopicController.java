@@ -3,6 +3,7 @@ package br.com.leords.forum.controllers;
 import br.com.leords.forum.controllers.dtos.DetailsTopicDto;
 import br.com.leords.forum.controllers.dtos.TopicDto;
 import br.com.leords.forum.controllers.forms.TopicForm;
+import br.com.leords.forum.controllers.forms.UpdateTopicForm;
 import br.com.leords.forum.models.Topic;
 import br.com.leords.forum.repositories.CourseRepository;
 import br.com.leords.forum.repositories.TopicRepository;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -45,5 +47,12 @@ public class TopicController {
     @GetMapping(path = "/{id}")
     public DetailsTopicDto detailsTopic(@PathVariable("id") Long id) {
         return new DetailsTopicDto(topicRepository.getById(id));
+    }
+    
+    @PutMapping(path = "/{id}")
+    @Transactional
+    public ResponseEntity<TopicDto> updateTopic(@PathVariable("id") Long id, @RequestBody @Valid UpdateTopicForm form) {
+        Topic topic = form.update(id, topicRepository);
+        return ResponseEntity.ok(new TopicDto(topic));
     }
 }
