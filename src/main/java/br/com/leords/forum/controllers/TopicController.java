@@ -7,9 +7,10 @@ import br.com.leords.forum.controllers.forms.UpdateTopicForm;
 import br.com.leords.forum.models.Topic;
 import br.com.leords.forum.repositories.CourseRepository;
 import br.com.leords.forum.repositories.TopicRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
-import static org.springframework.data.domain.Sort.*;
+import static org.springframework.data.domain.Sort.Direction;
 
 @RestController
 @RequestMapping("/topics")
@@ -35,7 +36,8 @@ public class TopicController {
     }
     
     @GetMapping
-    public Page<TopicDto> listTopics(@RequestParam(required = false) String courseName, @PageableDefault(sort = {"id", "createdAt"}, direction = Direction.DESC, page = 0, size = 5) Pageable pagination) {
+    @Cacheable(value = "listTopics")
+    public Page<TopicDto> listTopics(@RequestParam(required = false) String courseName, @PageableDefault(sort = {"id", "createdAt"}, direction = Direction.ASC, page = 0, size = 5) Pageable pagination) {
         if (courseName == null) {
             return TopicDto.modelsToDtos(topicRepository.findAll(pagination));
         }
@@ -43,6 +45,8 @@ public class TopicController {
     }
     
     @PostMapping
+    @Transactional
+    @CacheEvict(value = "listTopics", allEntries = true)
     public ResponseEntity<TopicDto> createTopic(@RequestBody @Valid TopicForm form, UriComponentsBuilder uriBuilder) {
         Topic topic = form.formToModel(courseRepository);
         topicRepository.save(topic);
