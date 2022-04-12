@@ -8,8 +8,9 @@ import br.com.leords.forum.models.Topic;
 import br.com.leords.forum.repositories.CourseRepository;
 import br.com.leords.forum.repositories.TopicRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,6 +19,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
+
+import static org.springframework.data.domain.Sort.*;
 
 @RestController
 @RequestMapping("/topics")
@@ -32,8 +35,7 @@ public class TopicController {
     }
     
     @GetMapping
-    public Page<TopicDto> listTopics(@RequestParam(required = false) String courseName, @RequestParam int page, @RequestParam int quantity) {
-        Pageable pagination = PageRequest.of(page, quantity);
+    public Page<TopicDto> listTopics(@RequestParam(required = false) String courseName, @PageableDefault(sort = {"id", "createdAt"}, direction = Direction.DESC, page = 0, size = 5) Pageable pagination) {
         if (courseName == null) {
             return TopicDto.modelsToDtos(topicRepository.findAll(pagination));
         }
