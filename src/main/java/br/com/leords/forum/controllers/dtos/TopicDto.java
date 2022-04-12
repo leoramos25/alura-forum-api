@@ -1,6 +1,7 @@
 package br.com.leords.forum.controllers.dtos;
 
 import br.com.leords.forum.models.Topic;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,8 +21,8 @@ public class TopicDto {
         this.createdAt = topic.getCreatedAt();
     }
     
-    public static List<TopicDto> modelsToDtos(List<Topic> topics) {
-        return topics.stream().map(TopicDto::new).collect(Collectors.toList());
+    public static Page<TopicDto> modelsToDtos(Page<Topic> topics) {
+        return topics.map(TopicDto::new);
     }
     
     public Long getId() {

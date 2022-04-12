@@ -7,6 +7,9 @@ import br.com.leords.forum.controllers.forms.UpdateTopicForm;
 import br.com.leords.forum.models.Topic;
 import br.com.leords.forum.repositories.CourseRepository;
 import br.com.leords.forum.repositories.TopicRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -14,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,11 +32,12 @@ public class TopicController {
     }
     
     @GetMapping
-    public List<TopicDto> listTopics(String courseName) {
+    public Page<TopicDto> listTopics(@RequestParam(required = false) String courseName, @RequestParam int page, @RequestParam int quantity) {
+        Pageable pagination = PageRequest.of(page, quantity);
         if (courseName == null) {
-            return TopicDto.modelsToDtos(topicRepository.findAll());
+            return TopicDto.modelsToDtos(topicRepository.findAll(pagination));
         }
-        return TopicDto.modelsToDtos(topicRepository.findByCourseName(courseName));
+        return TopicDto.modelsToDtos(topicRepository.findByCourseName(courseName, pagination));
     }
     
     @PostMapping
