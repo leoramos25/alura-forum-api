@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private final static String[] AUTH_WHITELIST = {
+    private static final String[] AUTH_WHITELIST = {
             "/topics",
             "/topics/*"
     };
@@ -27,7 +27,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, AUTH_WHITELIST)
-                .permitAll();
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .formLogin() ;
     }
     
     //Static resources configuration
