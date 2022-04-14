@@ -57,10 +57,7 @@ public class TopicController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<DetailsTopicDto> detailsTopic(@PathVariable("id") Long id) {
         Optional<Topic> topic = topicRepository.findById(id);
-        if (topic.isPresent()) {
-            return ResponseEntity.ok().body(new DetailsTopicDto(topic.get()));
-        }
-        return ResponseEntity.notFound().build();
+        return topic.map(value -> ResponseEntity.ok().body(new DetailsTopicDto(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
     
     @PutMapping(path = "/{id}")
