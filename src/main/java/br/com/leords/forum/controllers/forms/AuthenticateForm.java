@@ -1,5 +1,7 @@
 package br.com.leords.forum.controllers.forms;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 public class AuthenticateForm {
     
     private String email;
@@ -19,5 +21,9 @@ public class AuthenticateForm {
     
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public UsernamePasswordAuthenticationToken formToUsernamePasswordAuthenticationToken() {
+        return new UsernamePasswordAuthenticationToken(email, password);
     }
 }

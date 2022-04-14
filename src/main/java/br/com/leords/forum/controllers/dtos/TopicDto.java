@@ -4,8 +4,6 @@ import br.com.leords.forum.models.Topic;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TopicDto {
     

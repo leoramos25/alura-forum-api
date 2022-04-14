@@ -1,7 +1,9 @@
 package br.com.leords.forum.configuration.security;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +23,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     
     public SecurityConfiguration(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
+    }
+    
+    @Override
+    @Bean
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
     
     //Authentication config
