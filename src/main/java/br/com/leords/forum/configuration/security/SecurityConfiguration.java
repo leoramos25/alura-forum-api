@@ -6,19 +6,26 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    
     private static final String[] AUTH_WHITELIST = {
             "/topics",
             "/topics/**"
     };
+    private final AuthenticationService authenticationService;
+    
+    public SecurityConfiguration(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
     
     //Authentication config
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
+        auth.userDetailsService(authenticationService).passwordEncoder(new BCryptPasswordEncoder());
     }
     
     //Authorization config
