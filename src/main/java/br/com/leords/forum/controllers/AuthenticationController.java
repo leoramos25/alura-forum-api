@@ -1,6 +1,7 @@
 package br.com.leords.forum.controllers;
 
 import br.com.leords.forum.configuration.security.TokenService;
+import br.com.leords.forum.controllers.dtos.TokenDto;
 import br.com.leords.forum.controllers.forms.AuthenticateForm;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,8 +33,7 @@ public class AuthenticationController {
         try {
             Authentication authenticate = authenticationManager.authenticate(userData);
             String token = tokenService.generateToken(authenticate);
-            System.out.println(token);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new TokenDto(token, "Bearer"));
         } catch (AuthenticationException error) {
             return ResponseEntity.badRequest().build();
         }
