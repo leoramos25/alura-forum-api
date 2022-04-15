@@ -12,14 +12,15 @@ import java.util.Date;
 @Service
 public class TokenService {
     
+    private static final String API_NAME = "FORUM";
     @Value("${forum.jwt.expiration}")
     private String expiration;
     @Value("${forum.jwt.secret}")
     private String secret;
-    private static final String API_NAME = "FORUM";
-    Date today = new Date();
-    Date expirationDate = new Date(today.getTime() + Long.parseLong(expiration));
+    
     public String generateToken(Authentication authenticate) {
+        Date today = new Date();
+        Date expirationDate = new Date(today.getTime() + Long.parseLong(expiration));
         User loggedUser = (User) authenticate.getPrincipal();
         return Jwts.builder()
                 .setIssuer(API_NAME)
