@@ -21,9 +21,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/topics/**",
     };
     private final AuthenticationService authenticationService;
+    private final TokenService tokenService;
     
-    public SecurityConfiguration(AuthenticationService authenticationService) {
+    public SecurityConfiguration(AuthenticationService authenticationService, TokenService tokenService) {
         this.authenticationService = authenticationService;
+        this.tokenService = tokenService;
     }
     
     @Override
@@ -47,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new AuthenticateTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new AuthenticateTokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
     }
     
 }
