@@ -1,5 +1,6 @@
 package br.com.leords.forum.configuration.security;
 
+import br.com.leords.forum.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,10 +23,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
     private final AuthenticationService authenticationService;
     private final TokenService tokenService;
+    private final UserRepository userRepository;
     
-    public SecurityConfiguration(AuthenticationService authenticationService, TokenService tokenService) {
+    public SecurityConfiguration(AuthenticationService authenticationService, TokenService tokenService, UserRepository userRepository) {
         this.authenticationService = authenticationService;
         this.tokenService = tokenService;
+        this.userRepository = userRepository;
     }
     
     @Override
@@ -49,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new AuthenticateTokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new AuthenticateTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
     }
     
 }

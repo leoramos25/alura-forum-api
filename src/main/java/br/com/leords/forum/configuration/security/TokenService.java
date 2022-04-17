@@ -1,6 +1,7 @@
 package br.com.leords.forum.configuration.security;
 
 import br.com.leords.forum.models.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,10 +34,15 @@ public class TokenService {
     
     public boolean isValid(String token) {
         try {
-            Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return true;
         } catch (Exception error) {
             return false;
         }
+    }
+    
+    public Long getUserId(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Long.parseLong(claims.getSubject());
     }
 }
